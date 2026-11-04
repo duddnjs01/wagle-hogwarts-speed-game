@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAGLE | Hogwarts Speed Game</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Serif+KR:wght@400;500;600;700&display=swap');
+
+:root {
+  --gold: #d5b46a;
+  --gold-light: #f0d99d;
+  --paper: #f0e8d6;
+  --dark: #10151d;
+  --panel: rgba(25, 32, 43, .94);
+  --muted: #b9b3a5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--paper);
+  font-family: 'Noto Serif KR', serif;
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(91,75,48,.28), transparent 45%),
+    linear-gradient(135deg, #10151d, #202735 55%, #111720);
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .15;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, white 99%, transparent),
+    radial-gradient(2px 2px at 70% 20%, white 99%, transparent),
+    radial-gradient(1px 1px at 85% 70%, white 99%, transparent),
+    radial-gradient(1px 1px at 40% 80%, white 99%, transparent);
+  background-size: 180px 180px;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.wrap {
+  width: min(900px, 92%);
+  margin: 0 auto;
+  padding: 36px 0 60px;
+}
+header { text-align: center; margin-bottom: 28px; }
+.crest {
+  width: 72px;
+  height: 82px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--gold);
+  color: var(--gold-light);
+  clip-path: polygon(0 0,100% 0,100% 72%,50% 100%,0 72%);
+  background: linear-gradient(145deg,#343d4b,#151c27);
+  font-size: 35px;
+}
+.brand {
+  color: var(--gold);
+  font-family: Cinzel, serif;
+  font-size: clamp(25px,5vw,39px);
+  letter-spacing: 3px;
+  margin: 0;
+}
+.subtitle {
+  color: var(--muted);
+  letter-spacing: 3px;
+  font-size: 12px;
+  margin-top: 9px;
+}
+.rule {
+  width: 110px;
+  height: 1px;
+  background: var(--gold);
+  margin: 20px auto;
+  opacity: .7;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid rgba(213,180,106,.45);
+  box-shadow: 0 15px 50px rgba(0,0,0,.35);
+  border-radius: 8px;
+  padding: clamp(22px,5vw,42px);
+}
+h2 {
+  color: var(--gold-light);
+  font-family: Cinzel, 'Noto Serif KR', serif;
+  font-size: 22px;
+  text-align: center;
+  margin: 0 0 12px;
+}
+.intro {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+  margin-bottom: 28px;
+}
+.field { margin: 18px 0; }
+label {
+  display: block;
+  color: var(--gold-light);
+  font-size: 13px;
+  margin-bottom: 9px;
+}
+input, select {
+  width: 100%;
+  padding: 14px;
+  color: var(--paper);
+  background: #111923;
+  border: 1px solid #555b61;
+  border-radius: 5px;
+  outline: none;
+}
+input:focus, select:focus { border-color: var(--gold); }
+select option { background: #18212c; }
+.primary, .secondary {
+  width: 100%;
+  border-radius: 5px;
+  padding: 14px 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: .2s;
+}
+.primary {
+  background: linear-gradient(135deg,#e3c77f,#b38b42);
+  color: #171717;
+  border: 1px solid #f2dca0;
+}
+.primary:hover { filter: brightness(1.1); }
+.secondary {
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px solid var(--gold);
+  margin-top: 10px;
+}
+.message {
+  min-height: 24px;
+  text-align: center;
+  color: #f0b6a6;
+  font-size: 13px;
+  margin: 12px 0 0;
+  line-height: 1.6;
+}
+.hidden { display: none !important; }
+.info {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.8;
+  margin-top: 20px;
+}
+.section-title {
+  text-align: center;
+  color: var(--gold);
+  font-family: Cinzel, serif;
+  letter-spacing: 2px;
+  font-size: 15px;
+  margin: 38px 0 14px;
+}
+.leaderboard {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.leaderboard th {
+  color: var(--gold);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(213,180,106,.5);
+  padding: 12px 5px;
+}
+.leaderboard td {
+  text-align: center;
+  padding: 12px 5px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.leaderboard tr:first-child td { color: var(--gold-light); }
+.empty { text-align:center; color:var(--muted); padding:22px; font-size:13px; }
+.game-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.player { color: var(--gold-light); font-size: 14px; }
+.timer {
+  color: var(--gold-light);
+  font-family: Cinzel, serif;
+  font-size: 28px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 8px 18px;
+  min-width: 105px;
+  text-align: center;
+}
+.timer.danger { color: #ff9b88; border-color: #ff9b88; }
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.progress {
+  height: 5px;
+  background: #424752;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.progress > div {
+  height: 100%;
+  background: var(--gold);
+  width: 0;
+  transition: width .25s;
+}
+.question-number {
+  color: var(--gold);
+  text-align: center;
+  font-family: Cinzel, serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+.question {
+  font-size: clamp(17px,3vw,22px);
+  font-weight: 600;
+  line-height: 1.8;
+  text-align: center;
+  margin: 0 0 28px;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+.options { display: grid; gap: 12px; }
+.option {
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  color: var(--paper);
+  background: #202a37;
+  border: 1px solid #535c68;
+  border-radius: 5px;
+  line-height: 1.6;
+  transition: .15s;
+}
+.option:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: #303746;
+}
+.option .letter {
+  display: inline-grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  margin-right: 10px;
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  border-radius: 50%;
+  font-family: Cinzel, serif;
+  font-size: 12px;
+}
+.scoreline {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 20px;
+}
+.result-score {
+  text-align: center;
+  font-family: Cinzel, serif;
+  color: var(--gold-light);
+  font-size: 54px;
+  margin: 24px 0 5px;
+}
+.result-label { text-align:center; color:var(--muted); font-size:13px; }
+.result-detail {
+  text-align:center;
+  line-height:2;
+  margin: 24px 0;
+  color: var(--paper);
+}
+footer {
+  text-align: center;
+  color: #777f88;
+  font-size: 11px;
+  margin-top: 32px;
+  letter-spacing: 1px;
+}
+@media(max-width:520px) {
+  .wrap { padding-top: 24px; }
+  .panel { padding: 22px 17px; }
+  .game-top { justify-content: center; }
+  .player { width: 100%; text-align: center; }
+  .leaderboard { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="crest">✦</div>
+    <h1 class="brand">WAGLE</h1>
+    <div class="subtitle">HOGWARTS SPEED CHALLENGE</div>
+    <div class="rule"></div>
+  </header>
+
+  <section id="loginScreen" class="panel">
+    <h2>THE GREAT WIZARDING QUIZ</h2>
+    <p class="intro">
+      호그와트의 지식을 시험할 시간이야.<br>
+      이름을 선택하고 마법의 도전을 시작해 봐.
+    </p>
+    <div class="field">
+      <label for="nickname">참가자 이름</label>
+      <select id="nickname">
+        <option value="">참가자 목록을 불러오는 중...</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="accessCode">개인 접속 코드</label>
+      <input id="accessCode" type="password" autocomplete="off"
+        placeholder="개인 접속 코드를 입력해 줘">
+    </div>
+    <button id="loginButton" class="primary">마법의 방 입장하기</button>
+    <p id="loginMessage" class="message" role="status"></p>
+    <p class="info">
+      제한 시간 120초 · 4지선다형 · 1인 1회 참여<br>
+      정답 수가 같으면 더 빠르게 완료한 참가자가 높은 순위에 올라.
+    </p>
+  </section>
+
+  <section id="startScreen" class="panel hidden">
+    <h2>WELCOME TO HOGWARTS</h2>
+    <p class="intro" id="welcomeText"></p>
+    <div class="rule"></div>
+    <p class="intro">
+      총 50개의 문제 중 무작위 순서로 출제돼.<br>
+      정답을 선택하면 다음 문제로 넘어가며,<br>
+      120초가 지나면 자동으로 도전이 종료돼.
+    </p>
+    <button id="startButton" class="primary">도전 시작하기</button>
+    <p id="startMessage" class="message"></p>
+  </section>
+
+  <section id="gameScreen" class="panel hidden">
+    <div class="game-top">
+      <div class="player" id="playerName"></div>
+      <div class="timer" id="timer">02:00</div>
+    </div>
+    <div class="progress-row">
+      <span id="questionCount">문제 1 / 50</span>
+      <span id="scoreText">정답 0개</span>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="question-number" id="questionNumber">QUESTION 01</div>
+    <div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <p id="gameMessage" class="message"></p>
+  </section>
+
+  <section id="resultScreen" class="panel hidden">
+    <h2 id="resultHeading">CHALLENGE COMPLETE</h2>
+    <p class="intro" id="resultIntro">마법의 도전이 끝났어.</p>
+    <div class="result-score" id="finalScore">0</div>
+    <div class="result-label">CORRECT ANSWERS</div>
+    <div class="result-detail" id="resultDetail"></div>
+    <button id="showRankingButton" class="primary">명예의 전당 확인하기</button>
+  </section>
+
+  <section id="rankingSection">
+    <div class="section-title">✦ HALL OF FAME ✦</div>
+    <div class="panel" style="padding:15px 12px">
+      <table class="leaderboard">
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>참가자</th>
+            <th>정답</th>
+            <th>소요 시간</th>
+          </tr>
+        </thead>
+        <tbody id="rankingBody">
+          <tr><td colspan="4" class="empty">랭킹을 불러오는 중...</td></tr>
+        </tbody>
+      </table>
+      <button id="refreshRanking" class="secondary">랭킹 새로고침</button>
+    </div>
+  </section>
+
+  <footer>WAGLE · A MAGICAL READING COMMUNITY</footer>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbz2c6iU1GbIfdamTCB-g_X6pjzPpZYj0csocx6-_R7O4YFAVPFOhiJVy281LqfQiORN/exec";
+
+const $ = id => document.getElementById(id);
+
+let members = [];
+let currentMember = null;
+let currentQuestion = null;
+let currentScore = 0;
+let currentIndex = 0;
+let totalQuestions = 50;
+let deadline = 0;
+let timerInterval = null;
+let requestBusy = false;
+
+async function api(action, extra = {}) {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({ action, ...extra })
+  });
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "서버 요청에 실패했어.");
+  }
+
+  return result.data;
+}
+
+function showScreen(screenId) {
+  ["loginScreen", "startScreen", "gameScreen", "resultScreen"]
+    .forEach(id => $(id).classList.add("hidden"));
+  $(screenId).classList.remove("hidden");
+}
+
+function formatTime(seconds) {
+  const safe = Math.max(0, Math.floor(seconds));
+  const minutes = Math.floor(safe / 60);
+  const secs = safe % 60;
+  return String(minutes).padStart(2, "0") + ":" +
+         String(secs).padStart(2, "0");
+}
+
+function formatDuration(seconds) {
+  const safe = Math.max(0, Number(seconds) || 0);
+  return Math.floor(safe / 60) + "분 " +
+         (safe % 60) + "초";
+}
+
+async function loadMembers() {
+  const select = $("nickname");
+
+  try {
+    members = await api("members");
+    select.innerHTML = "";
+
+    if (!Array.isArray(members) || members.length === 0) {
+      select.innerHTML = '<option value="">등록된 참가자가 없어.</option>';
+      return;
+    }
+
+    select.innerHTML = '<option value="">이름을 선택해 줘</option>';
+
+    members.forEach(member => {
+      const option = document.createElement("option");
+      option.value = member.member_id;
+      option.textContent = member.nickname;
+      select.appendChild(option);
+    });
+  } catch (error) {
+    select.innerHTML = '<option value="">참가자 목록을 불러오지 못했어.</option>';
+    $("loginMessage").textContent =
+      "서버 연결 오류: " + error.message;
+  }
+}
+
+async function loadLeaderboard() {
+  const body = $("rankingBody");
+  body.innerHTML =
+    '<tr><td colspan="4" class="empty">랭킹을 불러오는 중...</td></tr>';
+
+  try {
+    const ranking = await api("leaderboard");
+    body.innerHTML = "";
+
+    if (!ranking || ranking.length === 0) {
+      body.innerHTML =
+        '<tr><td colspan="4" class="empty">아직 완료한 참가자가 없어.</td></tr>';
+      return;
+    }
+
+    ranking.forEach(item => {
+      const tr = document.createElement("tr");
+      [
+        item.rank,
+        item.nickname,
+        item.score + "개",
+        formatDuration(item.elapsed_seconds)
+      ].forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  } catch (error) {
+    body.innerHTML =
+      '<tr><td colspan="4" class="empty">랭킹을 불러오지 못했어.</td></tr>';
+  }
+}
+
+async function login() {
+  if (requestBusy) return;
+
+  const memberId = $("nickname").value;
+  const accessCode = $("accessCode").value.trim();
+
+  if (!memberId) {
+    $("loginMessage").textContent = "참가자 이름을 선택해 줘.";
+    return;
+  }
+  if (!accessCode) {
+    $("loginMessage").textContent = "개인 접속 코드를 입력해 줘.";
+    return;
+  }
+
+  const member = members.find(m => String(m.member_id) === String(memberId));
+  if (!member) {
+    $("loginMessage").textContent = "참가자 정보를 찾을 수 없어.";
+    return;
+  }
+
+  requestBusy = true;
+  $("loginButton").disabled = true;
+  $("loginMessage").textContent = "참가자를 확인하고 있어...";
+
+  try {
+    const result = await api("login", {
+      member_id: member.member_id,
+      nickname: member.nickname,
+      access_code: accessCode
+    });
+
+    currentMember = {
+      member_id: member.member_id,
+      nickname: member.nickname,
+      access_code: accessCode
+    };
+
+    if (result.has_attempt) {
+      if (result.status === "playing") {
+        const state = await api("state", currentMember);
+        if (state.finished) {
+          showResult(state.score, state.elapsed_seconds);
+        } else {
+          enterGame(state);
+        }
+      } else {
+        showScreen("resultScreen");
+        $("resultHeading").textContent = "ALREADY COMPLETED";
+        $("resultIntro").textContent =
+          "이미 도전을 완료했어. 한 번의 기회는 소중하니까!";
+        const ranking = await api("leaderboard");
+        const ownResult = ranking.find(
+          item => item.nickname === member.nickname
+        );
+        $("finalScore").textContent = ownResult ? ownResult.score : "-";
+        $("resultDetail").textContent = ownResult
+          ? "기록된 소요 시간: " + formatDuration(ownResult.elapsed_seconds)
+          : "기존 참여 기록을 확인해 줘.";
+      }
+    } else {
+      $("welcomeText").textContent =
+        member.nickname + "님, 호그와트에 온 것을 환영해!";
+      showScreen("startScreen");
+    }
+
+  } catch (error) {
+    $("loginMessage").textContent = error.message;
+  } finally {
+    requestBusy = false;
+    $("loginButton").disabled = false;
+  }
+}
+
+async function startGame() {
+  if (requestBusy || !currentMember) return;
+
+  requestBusy = true;
+  $("startButton").disabled = true;
+  $("startMessage").textContent = "마법의 도전을 준비하고 있어...";
+
+  try {
+    const state = await api("start", currentMember);
+
+    if (state.finished) {
+      showResult(state.score, state.elapsed_seconds);
+    } else {
+      enterGame(state);
+    }
+  } catch (error) {
+    $("startMessage").textContent = error.message;
+  } finally {
+    requestBusy = false;
+    $("startButton").disabled = false;
+  }
+}
+
+function enterGame(state) {
+  currentScore = Number(state.score) || 0;
+  currentIndex = Number(state.current_index) || 0;
+  totalQuestions = Number(state.total_questions) || 50;
+
+  $("playerName").textContent =
+    "WIZARD " + (state.nickname || currentMember.nickname);
+  $("scoreText").textContent = "정답 " + currentScore + "개";
+
+  showScreen("gameScreen");
+  renderQuestion(state.question);
+  startTimer(Number(state.remaining_seconds) || 0);
+}
+
+function renderQuestion(question) {
+  if (!question || !Array.isArray(question.options)) {
+    showResult(currentScore);
+    return;
+  }
+
+  currentQuestion = question;
+  $("questionNumber").textContent =
+    "QUESTION " + String(currentIndex + 1).padStart(2, "0");
+  $("questionCount").textContent =
+    "문제 " + (currentIndex + 1) + " / " + totalQuestions;
+  $("questionText").textContent = question.question;
+  $("scoreText").textContent = "정답 " + currentScore + "개";
+  $("progressBar").style.width =
+    (currentIndex / totalQuestions * 100) + "%";
+  $("gameMessage").textContent = "";
+
+  const options = $("options");
+  options.innerHTML = "";
+
+  question.options.forEach(option => {
+    const button = document.createElement("button");
+    button.className = "option";
+
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = option.value;
+
+    const label = document.createElement("span");
+    label.textContent = option.label;
+
+    button.appendChild(letter);
+    button.appendChild(label);
+
+    button.addEventListener("click", () => submitAnswer(option.value));
+    options.appendChild(button);
+  });
+}
+
+function startTimer(remaining) {
+  clearInterval(timerInterval);
+  deadline = Date.now() + remaining * 1000;
+  updateTimer();
+
+  timerInterval = setInterval(() => {
+    updateTimer();
+  }, 250);
+}
+
+function updateTimer() {
+  const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+  $("timer").textContent = formatTime(remaining);
+  $("timer").classList.toggle("danger", remaining <= 15);
+
+  if (remaining <= 0) {
+    clearInterval(timerInterval);
+    finishByServer();
+  }
+}
+
+async function finishByServer() {
+  if (requestBusy || !currentMember) return;
+
+  requestBusy = true;
+  $("gameMessage").textContent = "제한 시간이 끝났어. 결과를 확인하고 있어...";
+  disableOptions();
+
+  try {
+    const state = await api("state", currentMember);
+    showResult(state.score, state.elapsed_seconds);
+  } catch (error) {
+    $("gameMessage").textContent =
+      "결과 확인에 실패했어. 인터넷 연결을 확인하고 새로고침해 줘.";
+  } finally {
+    requestBusy = false;
+  }
+}
+
+function disableOptions() {
+  document.querySelectorAll(".option").forEach(button => {
+    button.disabled = true;
+  });
+}
+
+async function submitAnswer(answer) {
+  if (requestBusy || !currentQuestion || !currentMember) return;
+
+  requestBusy = true;
+  disableOptions();
+
+  try {
+    const result = await api("answer", {
+      ...currentMember,
+      question_id: currentQuestion.question_id,
+      answer: answer
+    });
+
+    currentScore = Number(result.score) || 0;
+    $("scoreText").textContent = "정답 " + currentScore + "개";
+
+    if (result.finished) {
+      showResult(result.score, result.elapsed_seconds);
+    } else {
+      currentIndex = Number(result.current_index);
+      renderQuestion(result.question);
+    }
+  } catch (error) {
+    $("gameMessage").textContent =
+      error.message + " 새로고침 후 다시 확인해 줘.";
+    disableOptions();
+  } finally {
+    requestBusy = false;
+  }
+}
+
+function showResult(score, elapsedSeconds) {
+  clearInterval(timerInterval);
+  currentScore = Number(score) || 0;
+
+  showScreen("resultScreen");
+  $("resultHeading").textContent = "CHALLENGE COMPLETE";
+  $("resultIntro").textContent =
+    currentMember
+      ? currentMember.nickname + "님의 마법 도전이 끝났어."
+      : "마법의 도전이 끝났어.";
+  $("finalScore").textContent = currentScore;
+  $("resultDetail").textContent =
+    elapsedSeconds === undefined || elapsedSeconds === null
+      ? "결과가 서버에 안전하게 저장됐어."
+      : "소요 시간: " + formatDuration(elapsedSeconds);
+
+  loadLeaderboard();
+}
+
+$("loginButton").addEventListener("click", login);
+$("startButton").addEventListener("click", startGame);
+$("refreshRanking").addEventListener("click", loadLeaderboard);
+$("showRankingButton").addEventListener("click", () => {
+  $("rankingSection").scrollIntoView({ behavior: "smooth" });
+});
+
+loadMembers();
+loadLeaderboard();
+</script>
+</body>
+</html>
