@@ -473,3 +473,138 @@ body {
     letter-spacing: 1px;
   }
 }
+
+/* ==========================================
+   WAGLE CLEAN & ELEGANT HEADER
+========================================== */
+
+/* 헤더 전체 */
+.site-header {
+  margin-top: 35px !important;
+  margin-bottom: 45px !important;
+  text-align: center;
+}
+
+/* 기존 로고 위 아이콘 완전히 제거 */
+.site-header .crest {
+  display: none !important;
+}
+
+/* WAGLE 로고 위 장식 제거 */
+.site-header .brand::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* WAGLE 로고 */
+.site-header .brand {
+  display: block;
+  margin: 0 auto 8px;
+  padding: 0;
+
+  font-family: 'Cinzel', serif;
+  font-size: clamp(66px, 8vw, 96px);
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.15;
+
+  background: linear-gradient(
+    180deg,
+    #fff2c9 0%,
+    #efd18b 45%,
+    #c89b50 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,.65));
+}
+
+/* 부제목: 리본 제거 */
+.site-header .subtitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  width: fit-content;
+  margin: 0 auto;
+  padding: 5px 0;
+
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+
+  color: #f1d18a !important;
+  -webkit-text-fill-color: #f1d18a !important;
+
+  font-family: 'Cinzel', serif;
+  font-size: clamp(15px, 2.3vw, 21px);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 6px rgba(0,0,0,.8);
+}
+
+/* 부제목 양옆의 가느다란 금색 선 */
+.site-header .subtitle::before,
+.site-header .subtitle::after {
+  position: static;
+  display: block;
+  width: 48px;
+  height: 1px;
+  flex-shrink: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #dfbd75
+  );
+
+  border: none;
+  transform: none;
+}
+
+.site-header .subtitle::after {
+  background: linear-gradient(
+    90deg,
+    #dfbd75,
+    transparent
+  );
+}
+
+/* 한국어 슬로건은 이번 디자인에서 숨김 */
+.site-header .tagline {
+  display: none !important;
+}
+
+/* 기존 장식 구분선도 제거 */
+.site-header .rule {
+  display: none !important;
+}
+
+/* 모바일 */
+@media (max-width: 600px) {
+  .site-header {
+    margin-top: 25px !important;
+    margin-bottom: 35px !important;
+  }
+
+  .site-header .brand {
+    font-size: 58px;
+    letter-spacing: 2px;
+  }
+
+  .site-header .subtitle {
+    gap: 10px;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .site-header .subtitle::before,
+  .site-header .subtitle::after {
+    width: 25px;
+  }
+}
