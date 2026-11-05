@@ -417,7 +417,7 @@ footer {
   <h1 class="brand">WAGLE</h1>
 
   <div class="subtitle">
-    <span>Hogwarts Speed Game</span>
+    <span>Book Review Speed Game</span>
   </div>
 
   <p class="tagline">
@@ -430,8 +430,8 @@ footer {
   <section id="loginScreen" class="panel">
     <h2>THE GREAT WIZARDING QUIZ</h2>
     <p class="intro">
-      호그와트의 지식을 시험할 시간이야.<br>
-      이름을 선택하고 마법의 도전을 시작해 봐.
+      당신의 와글에 대한 관심도는?!<br>
+      나 너 조아하는데 너 나 안 조아해?
     </p>
     <div class="field">
       <label for="nickname">참가자 이름</label>
@@ -447,7 +447,7 @@ footer {
     <button id="loginButton" class="primary">마법의 방 입장하기</button>
     <p id="loginMessage" class="message" role="status"></p>
     <p class="info">
-      제한 시간 120초 · 4지선다형 · 1인 1회 참여<br>
+      제한 시간 7분 · 4지선다형 · 1인 1회 참여<br>
       정답 수가 같으면 더 빠르게 완료한 참가자가 높은 순위에 올라.
     </p>
   </section>
@@ -457,9 +457,9 @@ footer {
     <p class="intro" id="welcomeText"></p>
     <div class="rule"></div>
     <p class="intro">
-      총 50개의 문제 중 무작위 순서로 출제돼.<br>
+      총 40개의 문제 중 무작위 순서로 출제돼.<br>
       정답을 선택하면 다음 문제로 넘어가며,<br>
-      120초가 지나면 자동으로 도전이 종료돼.
+      7분 지나면 자동으로 도전이 종료돼.
     </p>
     <button id="startButton" class="primary">도전 시작하기</button>
     <p id="startMessage" class="message"></p>
@@ -468,10 +468,10 @@ footer {
   <section id="gameScreen" class="panel hidden">
     <div class="game-top">
       <div class="player" id="playerName"></div>
-      <div class="timer" id="timer">02:00</div>
+      <div class="timer" id="timer">07:00</div>
     </div>
     <div class="progress-row">
-      <span id="questionCount">문제 1 / 50</span>
+      <span id="questionCount">문제 1 / 40</span>
       <span id="scoreText">정답 0개</span>
     </div>
     <div class="progress"><div id="progressBar"></div></div>
@@ -523,7 +523,7 @@ let currentMember = null;
 let currentQuestion = null;
 let currentScore = 0;
 let currentIndex = 0;
-let totalQuestions = 50;
+let totalQuestions = 40;
 let deadline = 0;
 let timerInterval = null;
 let requestBusy = false;
@@ -728,7 +728,7 @@ async function startGame() {
 function enterGame(state) {
   currentScore = Number(state.score) || 0;
   currentIndex = Number(state.current_index) || 0;
-  totalQuestions = Number(state.total_questions) || 50;
+  totalQuestions = Number(state.total_questions) || 40;
 
   $("playerName").textContent =
     "WIZARD " + (state.nickname || currentMember.nickname);
